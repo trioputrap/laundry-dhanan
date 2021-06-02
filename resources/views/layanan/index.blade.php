@@ -62,6 +62,8 @@
 
         $(".btn-dlt-alert").click(function(event){
             button = $(this);
+            title = button.data('title')
+            text = button.data('text')
             index = $(".btn-dlt-alert").index(button);
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
@@ -72,13 +74,13 @@
             })
             
             swalWithBootstrapButtons.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                title: title,
+                text: text,
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonClass: 'ml-2',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
@@ -106,6 +108,13 @@
                         <div class="col-md-6 col-6">
                             <h6 class="card-title">Data Layanan</h6>
                         </div>
+                        <div class="col-md-6 col-6">
+                            <div class="flt-right">
+                                <a class="btn btn-success btn-icon-text btn-add-layanan" href="javascript:void(0)" id="btn-add-layanan" >
+                                    <i data-feather="plus" class="btn-icon-prepend"></i> Tambah Layanan
+                                </a>
+                            </div>  
+                        </div>
                     </div>          
                     <div class="table-responsive">
                         <table id="dataTableExample" class="table">
@@ -127,6 +136,12 @@
                                         <button data-index="{{$key}}" class="btn-edit-layanan btn btn-primary btn-icon">
                                             <i data-feather="edit"></i>
                                         </button>
+                                        <form class="frm-dlt-alert" action="{{route('layanan.delete', $layanan)}}" method="post" style="display: inline-block;">
+                                            @csrf
+                                            <button type="button" class="btn-dlt-alert btn btn-danger btn-icon" data-title="Hapus Layanan" data-text="Anda yakin menghapus data layanan ini?">
+                                                <i data-feather="trash"></i>
+                                            </button>
+                                        </form> 
                                     </td>                         
                                 </tr>
                                 @endforeach

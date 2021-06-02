@@ -67,6 +67,8 @@
 
         $(".btn-dlt-alert").click(function(event){
             button = $(this);
+            title = button.data('title')
+            text = button.data('text')
             index = $(".btn-dlt-alert").index(button);
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
@@ -77,13 +79,13 @@
             })
             
             swalWithBootstrapButtons.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                title: title,
+                text: text,
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonClass: 'ml-2',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
