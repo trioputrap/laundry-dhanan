@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Laundry Ceria - Home')
+@section('title', 'Ceria Laundry - Home')
 
 @section('plugin-css')
 <link rel="stylesheet" href="{{asset('assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}">
@@ -58,7 +58,7 @@
             $('#konsumen-modal-title').html("Update Konsumen");
             $('#konsumen-modal').modal('show');
             $('#nama').val(konsumen.nama);
-            $('#username').val(konsumen.username);
+            
             $('#nohp').val(konsumen.nohp);
             $('#alamat').val(konsumen.alamat);
             $('#password').val(konsumen.password);
@@ -127,7 +127,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Nama</th>
-                                    <th>Username</th>
+                                  
                                     <th>No Hp</th>
                                     <th>Alamat</th>
                                     <th>Action</th>
@@ -138,7 +138,7 @@
                                 <tr>
                                     <td>{{$key+1}}</td>
                                     <td>{{ $konsumen->nama }}</td>
-                                    <td>{{ $konsumen->username }}</td>
+                                    
                                     <td>{{ $konsumen->nohp }}</td>
                                     <td>{{ $konsumen->alamat }}</td>
                                     <td>
@@ -181,10 +181,7 @@
                     <label for="nama">Nama Konsumen</label>
                     <input type="text" class="form-control" id="nama" name="nama" required autofocus>                     
                 </div>      
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" required autofocus>                     
-                </div>      
+                
                 <div class="form-group">
                     <label for="nohp">No Hp</label>
                     <input type="text" class="form-control" id="nohp" name="nohp" required autofocus>                     

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Laundry Ceria - Home')
+@section('title', 'Ceria Laundry - Home')
 
 @section('plugin-css')
 <link rel="stylesheet" href="{{asset('assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}">

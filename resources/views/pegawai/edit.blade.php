@@ -1,11 +1,13 @@
 @extends('layouts.admin')
-@section('title', 'Laundry Ceria - Profil')
+@section('title', 'Ceria Laundry - Profil')
 
 @section('plugin-css')
 {{-- SWEETALERT --}}
 <link rel="stylesheet" href="{{asset('assets/vendors/sweetalert2/sweetalert2.min.css')}}">
 {{-- SELECT2 --}}
 <link rel="stylesheet" href="{{asset('assets/vendors/select2/select2.min.css')}}">
+{{-- DROPIFY --}}
+<link rel="stylesheet" href="{{asset('assets/vendors/dropify/dist/dropify.min.css')}}">
 @endsection
 
 @section('plugin-js')
@@ -13,6 +15,9 @@
 <script src="{{asset('assets/vendors/sweetalert2/sweetalert2.min.js')}}"></script>
 {{-- SELECT2 --}}
 <script src="{{asset('assets/vendors/select2/select2.min.js')}}"></script>
+{{-- DROPIFY --}}
+<script src="{{asset('assets/vendors/dropify/dist/dropify.min.js')}}"></script>
+<script src="{{asset('assets/js/dropify.js')}}"></script>
 @endsection
 
 @section('custom-js')
@@ -69,7 +74,7 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Form Edit Profil</h4>
-                    <form name="memberForm" class="forms-sample" action="{{route('pegawai.update', $pegawai)}}" method="POST">
+                    <form name="memberForm" class="forms-sample" action="{{route('pegawai.update', $pegawai)}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-md-12">
@@ -106,8 +111,15 @@
                             <div class="col-md-2">
                                 <button type="button" style="margin-top: 30px;" onClick="generate();" class="btn btn-warning mr-2">Generate</button>
                             </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group drop-text">
+                                    <label for="deskripsiSoal">Profil</label>
+                                    <input type="file" name="profil" class="drop-file border" data-default-file="{{$pegawai->getProfilPath()}}" data-max-file-size="3M" data-allowed-file-extensions="jpg png jpeg"/>
+                                </div>
+                            </div>  
                         </div>                         
-                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                        <button type="submit" class="btn btn-primary mr-2">Simpan</button>
                         <a href="{{route('pegawai.index')}}" class="btn btn-light">Cancel</a>
                     </form>
                 </div>

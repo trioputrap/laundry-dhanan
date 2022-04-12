@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Layanan;
+use App\Pengerjaan;
 use Illuminate\Http\Request;
 
 class LayananController extends Controller
@@ -30,6 +31,7 @@ class LayananController extends Controller
 
     public function destroy(Layanan $layanan)
     {
+        Pengerjaan::where('id_layanan', $layanan->id_layanan)->delete();
         $layanan->delete();
         return redirect('layanan')->with('success', 'Berhasil menghapus data layanan');
     }

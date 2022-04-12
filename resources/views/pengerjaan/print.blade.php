@@ -18,20 +18,31 @@
         h1,h2,h3,h4,h5 {
             margin: 0;
         }
+
+        .logo-brand {
+            opacity: 1;
+            visibility: visible;
+            -webkit-transition: opacity .5s ease;
+            transition: opacity .5s ease;
+            font-weight: 900;
+            font-size: 25px;
+            letter-spacing: -1px;
+            color: #031a61; }
+        .logo-brand span {
+            color: #727cf5;
+            font-weight: 300; }
     </style>
 </head>
 <body>
     <table width="300px" align="center">
         <tr>
-            <td colspan=3 style="text-align:center; font-size: 18px">CERIA LAUNDRY</td>
+            <td colspan=3 style="text-align:center; font-size: 18px"><div class="logo-brand">Ceria<span>Laundry</span></div></td>
         </tr>
         <tr>
-            <td colspan=3 style="text-align:center; padding-bottom: 32px">Jl. Janger No.31, Dauh Yeh Cani, Kec. Abiansemal, Kabupaten Badung, Bali 80352</td>
+            <td colspan=3 style="text-align:center;">Jl. Janger No.31, Dauh Yeh Cani, Kec. Abiansemal, Kabupaten Badung, Bali 80352</td>
         </tr>
         <tr>
-            <td>ID Transaksi</td>
-            <td>:</td>
-            <td>87</td>
+            <td colspan=3 style="text-align:center; font-size: 18px; padding-bottom: 32px">-------------------------------------------------</td>
         </tr>
         <tr>
             <td>Tanggal</td>
@@ -41,7 +52,7 @@
         <tr>
             <td>Karyawan</td>
             <td>:</td>
-            <td>{{ $pengerjaan->konsumen->nama }}</td>
+            <td>{{ $pengerjaan->pegawai->nama_pegawai }}</td>
         </tr>
         <tr>
             <td>ID Pelanggan</td>
@@ -59,12 +70,12 @@
             <td>{{ $pengerjaan->layanan->jenis_layanan }}</td>
         </tr>
         <tr>
-            <td>Jumlah(Kg)</td>
+            <td>Jumlah</td>
             <td>:</td>
             <td>{{ $pengerjaan->jumlah }}</td>
         </tr>
         <tr>
-            <td>Harga per Kg</td>
+            <td>Harga</td>
             <td>:</td>
             <td>Rp{{ number_format($pengerjaan->harga, 0, "", ".") }}</td>
         </tr>
@@ -75,7 +86,10 @@
         </tr>
         
         <tr>
-            <td colspan=3 align='center' style="padding-top: 32px">Terimakasih Atas Kepercayaan Anda Karena Telah Menggunakan Jasa Kami </td>
+            <td colspan=3 style="text-align:center; font-size: 18px; padding-top: 32px">-------------------------------------------------</td>
+        </tr>
+        <tr>
+            <td colspan=3 align='center'>Terimakasih Atas Kepercayaan Anda Karena Telah Menggunakan Jasa Kami </td>
         </tr>
     </table>
     

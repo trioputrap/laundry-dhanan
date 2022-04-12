@@ -6,6 +6,7 @@ use App\Pengerjaan;
 use App\Konsumen;
 use App\Layanan;
 use Illuminate\Http\Request;
+use Auth;
 use Carbon;
 use DB;
 use PDF;
@@ -13,18 +14,24 @@ use App;
 
 class PengerjaanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pengerjaans = Pengerjaan::get();
+        if(!$request->status){
+            $request->status = "";
+            $pengerjaans = Pengerjaan::get();
+        } else {
+            $pengerjaans = Pengerjaan::where('status', $request->status)->get();
+        }
         $konsumens = Konsumen::get();
         $layanans = Layanan::get();
-        return view('pengerjaan.index', compact('pengerjaans','konsumens','layanans'));
+        return view('pengerjaan.index', compact('pengerjaans','konsumens','layanans','request'));
     }
 
     public function store(Request $request)
     {
         $input = $request->all();
         $input['tanggal'] = Carbon::now();
+        $input['id_pegawai'] = Auth::user()->id_pegawai;
         $pengerjaan = Pengerjaan::create($input);
         return redirect('pengerjaan')->with('success', 'Berhasil menambah data pengerjaan');
     }
@@ -33,6 +40,7 @@ class PengerjaanController extends Controller
     {
         $pengerjaan = Pengerjaan::find($id);
         $input = $request->all();
+        $input['id_pegawai'] = Auth::user()->id_pegawai;
         $pengerjaan->update($input);
         return redirect('pengerjaan')->with('success', 'Berhasil memperbaharui data pengerjaan');
     }

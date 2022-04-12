@@ -11,6 +11,7 @@ class Pengerjaan extends Model
     public $timestamps = false;
     
     protected $fillable = [
+        'id_pegawai',
         'id_konsumen', 
         'id_layanan', 
         'jumlah', 

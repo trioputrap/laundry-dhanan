@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Konsumen;
+use App\Pengerjaan;
 use Illuminate\Http\Request;
 
 class KonsumenController extends Controller
@@ -10,7 +11,7 @@ class KonsumenController extends Controller
     
     public function login(Request $request){ 
         $input = $request->all(); 
-        $konsumen = Konsumen::where(['username' => $input['username'], 'password' => $input['password']]);
+        $konsumen = Konsumen::where(['nohp' => $input['telp'], 'password' => $input['password']]);
         if($konsumen->count()) {
             $response['status'] = 200;
             $response['message'] = "Login success";
@@ -33,7 +34,7 @@ class KonsumenController extends Controller
     { 
         $input = $request->all();
         $konsumen = Konsumen::create($input);
-        return redirect('home')->with('success', 'Berhasil menambah data konsumen');
+        return redirect('konsumen')->with('success', 'Berhasil menambah data konsumen');
     }
 
     public function update(Request $request, $id)
@@ -60,6 +61,7 @@ class KonsumenController extends Controller
     {
         $konsumen = Konsumen::find($id);
         $input = $request->all();
+        $input['password'] = ($input['password']=="") ? $konsumen->password : $input['password'];
         $konsumen->update($input);
         $response['status'] = 200;
         $response['message'] = "Berhasil Update Profil";
@@ -70,7 +72,8 @@ class KonsumenController extends Controller
 
     public function destroy(Konsumen $konsumen)
     {
+        Pengerjaan::where('id_konsumen', $konsumen->id_konsumen)->delete();
         $konsumen->delete();
-        return redirect('home')->with('success', 'Berhasil menghapus data konsumen');
+        return redirect('konsumen')->with('success', 'Berhasil menghapus data konsumen');
     }
 }

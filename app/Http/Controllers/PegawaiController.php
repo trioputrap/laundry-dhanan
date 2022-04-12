@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Pegawai;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
 
 class PegawaiController extends Controller
 {
@@ -31,6 +32,12 @@ class PegawaiController extends Controller
         $input = $request->all();
         $input['password'] = ($input['password'] == '') ? $pegawai->password : Hash::make($input['password']);
         $pegawai->update($input);
+        if($request->file('profil') != null){
+            File::delete($pegawai->getProfilPath());
+            $pegawai->profil = $pegawai->id_pegawai . "_profil." . $request->file('profil')->getClientOriginalExtension();
+            $pegawai->uploadPhoto($request->file('profil'), $pegawai->profil);
+            $pegawai->save();
+        }
         return redirect()->route('pegawai.index')->with('success', 'Berhasil memperbaharui data pegawai');
     }
 

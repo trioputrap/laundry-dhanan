@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Laundry Ceria - Home')
+@section('title', 'Ceria Laundry - Home')
 
 @section('plugin-css')
 <link rel="stylesheet" href="{{asset('assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}">
@@ -37,23 +37,39 @@
     @endif   
 </script>
 <script>
+    function numberWithCommas(x) {
+        var parts = x.toString().replace(".", ",").split(",");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return parts.join(",");
+    }
+
+    function showCurrency(x) {
+        return "Rp" + numberWithCommas(x);
+    }
     $(document).ready(function () {
+        $("#id_konsumen").select2({placeholder: "Pilih Konsumen"});
+        $("#id_layanan").select2({placeholder: "Pilih Layanan"});
+        $("#status").select2({placeholder: "Pilih Status", width: "100%"});
+
         var layanans = {!! $layanans !!}
         var pengerjaans = {!! $pengerjaans !!}
         console.log(pengerjaans)
 
         function hitung_total(){
-            var jumlah = parseInt($("#jumlah").val())
-            var harga_layanan = parseInt($("#harga").val())
+            var jumlah = parseFloat(($("#jumlah").val()=="")?0:$("#jumlah").val())
+            console.log(jumlah)
+            var harga_layanan = parseFloat($("#harga").val())
             var total = jumlah * harga_layanan
             $("#total_harga").val(total)
+            $('#total_harga-display').val(showCurrency(total));
         }
 
         //ubah harga layanan
         $("#id_layanan").change(function(){
-            var index = $(this).prop('selectedIndex')
+            var index = $(this).prop('selectedIndex') - 1
             var harga_layanan = layanans[index].harga
             $("#harga").val(harga_layanan)
+            $('#harga-display').val(showCurrency(harga_layanan))
             hitung_total()
         })
 
@@ -66,11 +82,13 @@
             $('#id_konsumen').val("");
             $('#id_layanan').val("");
             $('#harga').val("");
+            $('#harga-display').val("");
             $('#jumlah').val("");
             $('#total_harga').val("");
+            $('#total_harga-display').val("");
             $('#pengerjaan-form').attr('action', "{{route('pengerjaan.store')}}");
             $('#pengerjaan-modal-title').html("Tambah Pengerjaan");
-            $('#status_select').val('dalam antrean')
+            $('#status_select').val('antrean')
             $('#status_select').hide()
             $('#pengerjaan-modal').modal('show');
         });
@@ -85,12 +103,14 @@
 
             $('#pengerjaan-modal-title').html("Update Pengerjaan");
             $('#pengerjaan-modal').modal('show');
-            $('#id_konsumen').val(pengerjaan.id_konsumen);
-            $('#id_layanan').val(pengerjaan.id_layanan);
+            $('#id_konsumen').val(pengerjaan.id_konsumen).trigger('change');
+            $('#id_layanan').val(pengerjaan.id_layanan).trigger('change');
             $('#harga').val(pengerjaan.harga);
+            $('#harga-display').val(showCurrency(pengerjaan.harga))
             $('#jumlah').val(pengerjaan.jumlah);
             $('#total_harga').val(pengerjaan.total_harga);
-            $('#status').val(pengerjaan.status)
+            $('#total_harga-display').val(showCurrency(pengerjaan.total_harga));
+            $('#status').val(pengerjaan.status).trigger('change');
             $('#status_select').show()
         });
 
@@ -109,18 +129,46 @@
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <div class="row mb-20">
+                    <form id="formData" action="" method="get">
+                    <div class="row">
                         <div class="col-md-6 col-6">
                             <h6 class="card-title">Data Pengerjaan</h6>
                         </div>
-                        <div class="col-md-6 col-6">
+                        <div class="col-md-6 col-6 mb-20">
                             <div class="flt-right">
                                 <a class="btn btn-success btn-icon-text btn-edit-profile" href="javascript:void(0)" id="btn-add-pengerjaan" >
                                     <i data-feather="plus" class="btn-icon-prepend"></i> Tambah Pengerjaan
                                 </a>
-                            </div>  
+                            </div>
                         </div>
-                    </div>          
+                        <div class="col-md-3 col-sm-6 d-sm-block d-none">
+                            <label for="start_date" class="w-100">Status</label>
+                        </div>
+                    </div>
+                    <div class="row mb-20">
+                        <div class="col-md-3 col-sm-6 d-sm-none d-block">
+                            <label for="start_date" class="w-100">Status</label>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="form-group">
+                                <select name="status">
+                                    <option {{(!$request->status) ? "selected" : ""}} value=''>Semua Status</option>
+                                    <option {{($request->status == "antrean") ? "selected" : ""}} value='antrean'>Antrean</option>
+                                    <option {{($request->status == "dicuci") ? "selected" : ""}} value='dicuci'>Dicuci</option>
+                                    <option {{($request->status == "disetrika") ? "selected" : ""}} value='disetrika'>Disetrika</option>
+                                    <option {{($request->status == "selesai") ? "selected" : ""}} value='selesai'>Selesai</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <button id="btnSubmit" type="submit" class="btn btn-primary btn-icon-text" style="height: 35px">
+                                    Tampilkan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    </form>     
                     <div class="table-responsive">
                         <table id="dataTableExample" class="table">
                             <thead>
@@ -142,19 +190,19 @@
                                     <td>{{$key+1}}</td>
                                     <td>{{ $pengerjaan->konsumen->nama }}</td>
                                     <td>{{ $pengerjaan->layanan->jenis_layanan }}</td>
-                                    <td>{{ $pengerjaan->jumlah }}Kg</td>
+                                    <td>{{ $pengerjaan->jumlah }}</td>
                                     <td>Rp{{ number_format($pengerjaan->harga, 0, "", ".") }}</td>
                                     <td>Rp{{ number_format($pengerjaan->total_harga, 0, "", ".") }}</td>
                                     <td>
                                         @switch($pengerjaan->status)
-                                            @case('dalam antrean')
-                                            <span class="badge badge-light">dalam antrean</span>
+                                            @case('antrean')
+                                            <span class="badge badge-light">antrean</span>
                                             @break
-                                            @case('sedang dicuci')
-                                            <span class="badge badge-primary">sedang dicuci</span>
+                                            @case('dicuci')
+                                            <span class="badge badge-primary">dicuci</span>
                                             @break
-                                            @case('sedang disetrika')
-                                            <span class="badge badge-primary">sedang disetrika</span>
+                                            @case('disetrika')
+                                            <span class="badge badge-primary">disetrika</span>
                                             @break
                                             @case('selesai')
                                             <span class="badge badge-success">selesai</span>
@@ -195,16 +243,18 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="nama_pengerjaan">Nama Konsumen</label>
-                    <select id="id_konsumen" name="id_konsumen">
+                    <label for="nama_pengerjaan" class="w-100">Nama Konsumen</label>
+                    <select id="id_konsumen" name="id_konsumen" class="form-control" style="width: 100%" required>
+                        <option></option>
                         @foreach($konsumens as $konsumen)
-                        <option value="{{$konsumen->id_konsumen}}">{{$konsumen->nama}}</option>
+                        <option value="{{$konsumen->id_konsumen}}">{{$konsumen->nohp}} - {{$konsumen->nama}}</option>
                         @endforeach
                     </select>
                 </div>      
                 <div class="form-group">
                     <label for="nohp">Jenis Layanan</label>
-                    <select id="id_layanan" name="id_layanan">
+                    <select id="id_layanan" name="id_layanan" class="form-control" style="width: 100%" required>
+                        <option></option>
                         @foreach($layanans as $layanan)
                         <option value="{{$layanan->id_layanan}}">{{$layanan->jenis_layanan}}</option>
                         @endforeach
@@ -212,22 +262,24 @@
                 </div>      
                 <div class="form-group">
                     <label for="harga">Harga Layanan</label>
-                    <input type="number" class="form-control" id="harga" name="harga" required readonly>                     
+                    <input type="text" class="form-control" id="harga-display" required readonly>                     
+                    <input type="hidden" class="form-control" id="harga" name="harga" required>  
                 </div>      
                 <div class="form-group">
-                    <label for="jumlah">Jumlah(Kg)</label>
-                    <input type="number" class="form-control" id="jumlah" name="jumlah" required autofocus min=1>                     
+                    <label for="jumlah">Jumlah</label>
+                    <input type="text" class="form-control" id="jumlah" name="jumlah" required autofocus min=1>                     
                 </div>      
                 <div class="form-group">
                     <label for="total_harga">Total Harga</label>
-                    <input type="number" class="form-control" id="total_harga" name="total_harga" required readonly>                     
+                    <input type="text" class="form-control" id="total_harga-display" required readonly>  
+                    <input type="hidden" class="form-control" id="total_harga" name="total_harga" required>                     
                 </div>      
                 <div class="form-group" id="status_select">
                     <label for="status">Status Pengerjaan</label>
                     <select id="status" name="status">
-                        <option value="dalam antrean">dalam antrean</option>
-                        <option value="sedang dicuci">sedang dicuci</option>
-                        <option value="sedang disetrika">sedang disetrika</option>
+                        <option value="antrean">antrean</option>
+                        <option value="dicuci">dicuci</option>
+                        <option value="disetrika">disetrika</option>
                         <option value="selesai">selesai</option>
                     </select>
                 </div>   
