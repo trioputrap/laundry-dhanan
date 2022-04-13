@@ -231,7 +231,7 @@
 
 {{-- Modal --}}
 <div class="modal fade" id="pengerjaan-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div style="max-width: 800px !important" class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">        
         <form id="pengerjaan-form" class="forms-sample" action="" method="POST">
             @csrf
@@ -250,30 +250,47 @@
                         <option value="{{$konsumen->id_konsumen}}">{{$konsumen->nohp}} - {{$konsumen->nama}}</option>
                         @endforeach
                     </select>
-                </div>      
-                <div class="form-group">
-                    <label for="nohp">Jenis Layanan</label>
-                    <select id="id_layanan" name="id_layanan" class="form-control" style="width: 100%" required>
-                        <option></option>
-                        @foreach($layanans as $layanan)
-                        <option value="{{$layanan->id_layanan}}">{{$layanan->jenis_layanan}}</option>
-                        @endforeach
-                    </select>
-                </div>      
-                <div class="form-group">
-                    <label for="harga">Harga Layanan</label>
-                    <input type="text" class="form-control" id="harga-display" required readonly>                     
-                    <input type="hidden" class="form-control" id="harga" name="harga" required>  
-                </div>      
-                <div class="form-group">
-                    <label for="jumlah">Jumlah</label>
-                    <input type="text" class="form-control" id="jumlah" name="jumlah" required autofocus min=1>                     
-                </div>      
-                <div class="form-group">
-                    <label for="total_harga">Total Harga</label>
-                    <input type="text" class="form-control" id="total_harga-display" required readonly>  
-                    <input type="hidden" class="form-control" id="total_harga" name="total_harga" required>                     
-                </div>      
+                </div>     
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="nohp">Jenis Layanan</label>
+                            <select id="id_layanan" name="id_layanan" class="form-control" style="width: 100%" required>
+                                <option></option>
+                                @foreach($layanans as $layanan)
+                                <option value="{{$layanan->id_layanan}}">{{$layanan->jenis_layanan}}</option>
+                                @endforeach
+                            </select>
+                        </div>      
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="harga">Harga Layanan</label>
+                            <input type="text" class="form-control" id="harga-display" required readonly>                     
+                            <input type="hidden" class="form-control" id="harga" name="harga" required>  
+                        </div>     
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="jumlah">Jumlah</label>
+                            <input type="text" class="form-control" id="jumlah" name="jumlah" required autofocus min=1>                     
+                        </div>      
+                    </div>  
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="total_harga">Total Harga</label>
+                            <input type="text" class="form-control" id="total_harga-display" required readonly>  
+                            <input type="hidden" class="form-control" id="total_harga" name="total_harga" required>                     
+                        </div>  
+                    </div>
+                    <div class="col-md-1">
+                        <button data-index="{{$key}}" class="btn-edit-pengerjaan btn btn-primary btn-icon">
+                            <i data-feather="add"></i>
+                        </button>
+                    </div>
+                
+                    
+                </div>    
                 <div class="form-group" id="status_select">
                     <label for="status">Status Pengerjaan</label>
                     <select id="status" name="status">
